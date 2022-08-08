@@ -23,11 +23,19 @@ export default class Home extends Component {
 
   handleChange = ({ target }) => {
     const { name, value } = target;
-    this.setState({ [name]: value });
+    if (name === 'categoryId') {
+      this.setState({ [name]: value }, () => {
+        this.searchProducts();
+      });
+    } else {
+      this.setState({ [name]: value });
+    }
   };
 
   searchProducts = async (event) => {
-    event.preventDefault();
+    if (event) {
+      event.preventDefault();
+    }
     const { categoryId, searchInput } = this.state;
     if (categoryId || searchInput) {
       const { results } = await getProductsFromCategoryAndQuery(categoryId, searchInput);
