@@ -97,7 +97,13 @@ export default class Home extends Component {
                   return (
                     <div key={ id } data-testid="product">
                       <h1>{ title }</h1>
-                      <img src={ thumbnail } alt={ title } />
+                      <Link to={ `/product-details/${id}` }>
+                        <img
+                          src={ thumbnail }
+                          alt={ title }
+                          data-testid="product-detail-link"
+                        />
+                      </Link>
                       <span>{ price }</span>
                     </div>
                   );
