@@ -73,9 +73,25 @@ class ProductDetails extends Component {
     }
   };
 
+  addToCart = async (id, title, thumbnail, price) => {
+    const cartItem = { id, title, thumbnail, price, quantity: 1 };
+    const actualCart = JSON.parse(localStorage.getItem('cart'));
+    let newCart = [];
+    if (actualCart) {
+      newCart = [cartItem, ...actualCart];
+      if (actualCart.some((item) => item.id === cartItem.id)) {
+        newCart = actualCart;
+        newCart.forEach((item, i) => {
+          if (item.id === cartItem.id) newCart[i].quantity += 1;
+        });
+      }
+      localStorage.setItem('cart', JSON.stringify(newCart));
+    } else localStorage.setItem('cart', JSON.stringify([cartItem]));
+  };
+
   render() {
     const {
-      product,
+      product: { thumbnail, title, price, id },
       productId,
       emailInput,
       reviewInput,
@@ -83,18 +99,23 @@ class ProductDetails extends Component {
       rating,
       reviews,
     } = this.state;
-    console.log(productId);
-    console.log(rating);
     const inputs = ['1', '2', '3', '4', '5'];
     return (
       <div data-testid="product-detail-link">
         <img
-          src={ product.thumbnail }
-          alt={ product.title }
+          src={ thumbnail }
+          alt={ title }
           data-testid="product-detail-image"
         />
-        <p data-testid="product-detail-name">{product.title}</p>
-        <p data-testid="product-detail-price">{product.price}</p>
+        <p data-testid="product-detail-name">{ title }</p>
+        <p data-testid="product-detail-price">{ price }</p>
+        <button
+          type="button"
+          data-testid="product-detail-add-to-cart"
+          onClick={ () => this.addToCart(id, title, thumbnail, price) }
+        >
+          + carrinho
+        </button>
         <Link to="/shopping-cart">
           <button type="button" data-testid="shopping-cart-button">
             carrinho
