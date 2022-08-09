@@ -11,18 +11,25 @@ export default class ShoppingCart extends Component {
     this.setState({ cart: shoppingCart });
   }
 
-  handleRemoveItem = async (id) => {
-    const actualCart = JSON.parse(localStorage.getItem('cart'));
-    const item = actualCart.filter((C) => C.id !== id);
-    localStorage.setItem('cart', JSON.stringify(item));
+  handleRemoveItem = (id) => {
+    const { cart } = this.state;
+    const item = cart.filter((C) => C.id !== id);
     this.setState({ cart: item });
+    localStorage.setItem('cart', JSON.stringify(item));
   };
 
-  handleQuantity = (quantity, id) => {
+  handleQuantity = (event, id) => {
     const { cart } = this.state;
-    const NewQuantity = cart.map((C) => C.id === id);
-    console.log(quantity, id);
-    console.log(NewQuantity);
+    const { name } = event.target;
+    const itemIndex = cart.findIndex((item) => item.id === id);
+    const { quantity } = cart[itemIndex];
+    if (name === 'increment') {
+      cart[itemIndex].quantity = quantity + 1;
+    } else if (quantity > 1) {
+      cart[itemIndex].quantity = quantity - 1;
+    }
+    this.setState({ cart });
+    localStorage.setItem('cart', JSON.stringify(cart));
   }
 
    buildCart = () => {
@@ -42,10 +49,18 @@ export default class ShoppingCart extends Component {
              </button>
              <img src={ thumbnail } alt={ id } />
              <p>{price}</p>
-             <button data-testid="product-decrease-quantity" type="button">-</button>
+             <button
+               name="decrement"
+               onClick={ (event) => this.handleQuantity(event, id) }
+               data-testid="product-decrease-quantity"
+               type="button"
+             >
+               -
+             </button>
              <span data-testid="shopping-cart-product-quantity">{quantity}</span>
              <button
-               onClick={ () => this.handleQuantity(quantity, id) }
+               name="increment"
+               onClick={ (event) => this.handleQuantity(event, id) }
                data-testid="product-increase-quantity"
                type="button"
              >
