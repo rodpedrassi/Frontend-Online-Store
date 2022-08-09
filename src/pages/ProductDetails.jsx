@@ -131,6 +131,7 @@ class ProductDetails extends Component {
               />
               {inputs.map((input, index) => (
                 <input
+                  data-testid={ `${input}-rating` }
                   key={ index }
                   type="radio"
                   name="rating"
