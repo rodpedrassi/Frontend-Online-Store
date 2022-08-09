@@ -48,7 +48,7 @@ export default class Home extends Component {
     const actualCart = JSON.parse(localStorage.getItem('cart'));
     let newCart = [];
     if (actualCart) {
-      newCart = [cartItem, ...actualCart];
+      newCart = [...actualCart, cartItem];
       if (actualCart.some((item) => item.id === cartItem.id)) {
         newCart = actualCart;
         newCart.forEach((item, i) => {
