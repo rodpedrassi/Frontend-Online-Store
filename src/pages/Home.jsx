@@ -43,6 +43,32 @@ export default class Home extends Component {
     }
   }
 
+  // addToCart = async (id) => {
+  //   const { products } = this.state;
+  //   const theProduct = products.find((product) => product.id === id);
+  //   const arrayTest = 5
+  //   localStorage.setItem('cart', JSON.stringify(theProduct));
+  //   console.log(JSON.parse(localStorage.getItem('cart')));
+  //   console.log(theProduct);
+  // };
+
+  addToCart = async (id, title, thumbnail, price) => {
+    const cartItem = { id, title, thumbnail, price, quantity: 1 };
+    const actualCart = JSON.parse(localStorage.getItem('cart'));
+    let newCart = [];
+    if (actualCart) {
+      newCart = [cartItem, ...actualCart];
+      if (actualCart.some((item) => item.id === cartItem.id)) {
+        newCart = actualCart;
+        console.log(newCart);
+        newCart.forEach((item, i) => {
+          if (item.id === cartItem.id) newCart[i].quantity += 1;
+        });
+      }
+      localStorage.setItem('cart', JSON.stringify(newCart));
+    } else localStorage.setItem('cart', JSON.stringify([cartItem]));
+  };
+
   render() {
     const { categories, searchInput, products } = this.state;
     return (
@@ -99,6 +125,13 @@ export default class Home extends Component {
                       <h1>{ title }</h1>
                       <img src={ thumbnail } alt={ title } />
                       <span>{ price }</span>
+                      <button
+                        type="button"
+                        data-testid="product-add-to-cart"
+                        onClick={ () => this.addToCart(id, title, thumbnail, price) }
+                      >
+                        Adicionar ao Carrinho
+                      </button>
                     </div>
                   );
                 })
