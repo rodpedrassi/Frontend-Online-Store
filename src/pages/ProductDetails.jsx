@@ -92,7 +92,6 @@ class ProductDetails extends Component {
   render() {
     const {
       product: { thumbnail, title, price, id },
-      productId,
       emailInput,
       reviewInput,
       reviewFormError,
@@ -102,13 +101,9 @@ class ProductDetails extends Component {
     const inputs = ['1', '2', '3', '4', '5'];
     return (
       <div data-testid="product-detail-link">
-        <img
-          src={ thumbnail }
-          alt={ title }
-          data-testid="product-detail-image"
-        />
-        <p data-testid="product-detail-name">{ title }</p>
-        <p data-testid="product-detail-price">{ price }</p>
+        <img src={ thumbnail } alt={ title } data-testid="product-detail-image" />
+        <p data-testid="product-detail-name">{title}</p>
+        <p data-testid="product-detail-price">{price}</p>
         <button
           type="button"
           data-testid="product-detail-add-to-cart"
