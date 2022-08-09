@@ -43,15 +43,6 @@ export default class Home extends Component {
     }
   }
 
-  // addToCart = async (id) => {
-  //   const { products } = this.state;
-  //   const theProduct = products.find((product) => product.id === id);
-  //   const arrayTest = 5
-  //   localStorage.setItem('cart', JSON.stringify(theProduct));
-  //   console.log(JSON.parse(localStorage.getItem('cart')));
-  //   console.log(theProduct);
-  // };
-
   addToCart = async (id, title, thumbnail, price) => {
     const cartItem = { id, title, thumbnail, price, quantity: 1 };
     const actualCart = JSON.parse(localStorage.getItem('cart'));
