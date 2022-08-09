@@ -51,7 +51,6 @@ export default class Home extends Component {
       newCart = [cartItem, ...actualCart];
       if (actualCart.some((item) => item.id === cartItem.id)) {
         newCart = actualCart;
-        console.log(newCart);
         newCart.forEach((item, i) => {
           if (item.id === cartItem.id) newCart[i].quantity += 1;
         });
