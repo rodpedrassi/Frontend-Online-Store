@@ -11,12 +11,25 @@ class ProductDetails extends Component {
     rating: '',
     productId: '',
     reviewFormError: false,
+    productsInCart: 0,
+    freeShipping: false,
   };
 
   async componentDidMount() {
+    this.getShoppingCartSize();
     await this.fetchProduct();
     this.getReviewsFromLocalStorage();
   }
+
+  getShoppingCartSize = () => {
+    const actualCart = JSON.parse(localStorage.getItem('cart'));
+    if (actualCart) {
+      const cartSize = actualCart.reduce((acc, curr) => acc + curr.quantity, 0);
+      this.setState({
+        productsInCart: cartSize,
+      });
+    }
+  };
 
   getReviewsFromLocalStorage = () => {
     const { productId } = this.state;
@@ -35,7 +48,10 @@ class ProductDetails extends Component {
     const URL = `https://api.mercadolibre.com/items/${id}`;
     const response = await fetch(URL);
     const data = await response.json();
-    this.setState({ product: data, productId: id });
+    const {
+      shipping: { free_shipping: freeShipping },
+    } = data;
+    this.setState({ product: data, productId: id, freeShipping });
   };
 
   handleChange = (e) => {
@@ -86,7 +102,11 @@ class ProductDetails extends Component {
         });
       }
       localStorage.setItem('cart', JSON.stringify(newCart));
-    } else localStorage.setItem('cart', JSON.stringify([cartItem]));
+      this.getShoppingCartSize();
+    } else {
+      localStorage.setItem('cart', JSON.stringify([cartItem]));
+      this.getShoppingCartSize();
+    }
   };
 
   render() {
@@ -97,6 +117,8 @@ class ProductDetails extends Component {
       reviewFormError,
       rating,
       reviews,
+      productsInCart,
+      freeShipping,
     } = this.state;
     const inputs = ['1', '2', '3', '4', '5'];
     return (
@@ -104,6 +126,7 @@ class ProductDetails extends Component {
         <img src={ thumbnail } alt={ title } data-testid="product-detail-image" />
         <p data-testid="product-detail-name">{title}</p>
         <p data-testid="product-detail-price">{price}</p>
+        {freeShipping && <span data-testid="free-shipping">Frete Grátis</span>}
         <button
           type="button"
           data-testid="product-detail-add-to-cart"
@@ -116,6 +139,7 @@ class ProductDetails extends Component {
             carrinho
           </button>
         </Link>
+        <span data-testid="shopping-cart-size">{productsInCart}</span>
 
         <div className="reviews">
           <h2>Reviews</h2>
