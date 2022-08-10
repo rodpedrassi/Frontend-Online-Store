@@ -22,10 +22,10 @@ export default class ShoppingCart extends Component {
     const { cart } = this.state;
     const { name } = event.target;
     const itemIndex = cart.findIndex((item) => item.id === id);
-    const { quantity } = cart[itemIndex];
-    if (name === 'increment') {
+    const { quantity, availableQuantity } = cart[itemIndex];
+    if (name === 'increment' && quantity < availableQuantity) {
       cart[itemIndex].quantity = quantity + 1;
-    } else if (quantity > 1) {
+    } else if (quantity > 1 && name === 'decrement') {
       cart[itemIndex].quantity = quantity - 1;
     }
     this.setState({ cart });
